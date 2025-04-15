@@ -1,6 +1,7 @@
 import streamlit as st
 
-def inject_custom_css():
+# Inject custom CSS based on SRS UI requirements
+def custom_css():
     st.markdown("""
     <style>
     .section-title {
@@ -45,13 +46,14 @@ def inject_custom_css():
     </style>
     """, unsafe_allow_html=True)
 
+# Home page content aligned with SRS
 def show_home_page():
-    inject_custom_css()
+    custom_css()
 
     st.title("📊 Smart Data Understanding & Synthetic Data Generation")
     st.write("An intelligent platform for AutoEDA and privacy-aware synthetic data pipelines.")
 
-    # Section: Key Functionalities
+    # Key Features
     st.markdown('<div class="section-title">✨ Core Features</div>', unsafe_allow_html=True)
     st.markdown("""
     - 📁 Upload datasets (CSV/Excel) and auto-detect modality (Tabular/Text).
@@ -64,7 +66,7 @@ def show_home_page():
     - 🔐 Privacy toggle (enable GDPR/HIPAA-style synthetic generation).
     """)
 
-    # Section: Target Users
+    # Target Audience
     st.markdown('<div class="section-title">👥 Who Can Use This?</div>', unsafe_allow_html=True)
     st.markdown('<div class="audience-tile">', unsafe_allow_html=True)
     users = ["Data Scientists", "ML Engineers", "Healthcare Professionals", "Finance Analysts", "Researchers", "Students"]
@@ -73,7 +75,7 @@ def show_home_page():
         st.markdown(f'<div class="tile"><div style="font-size:2rem;">{icon}</div><div>{role}</div></div>', unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
 
-    # Section: Use Instructions
+    # Usage Steps
     st.markdown('<div class="section-title">🚀 Getting Started</div>', unsafe_allow_html=True)
     st.markdown("""
     <div class="info-box">
@@ -85,6 +87,10 @@ def show_home_page():
     </div>
     """, unsafe_allow_html=True)
 
-    # Final call to action
+    # Call to Action
     st.markdown('<div class="thank-you">Your AI journey begins here — get ready to analyze, simulate, and share data confidently!</div>', unsafe_allow_html=True)
     st.markdown('<a href="#file-uploader" class="start-button">📥 Upload Your Dataset</a>', unsafe_allow_html=True)
+
+# Render the home page
+if __name__ == "__main__":
+    show_home_page()
