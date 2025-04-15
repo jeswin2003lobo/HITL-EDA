@@ -19,4 +19,4 @@ scipy<1.11
 matplotlib
 seaborn
 plotly
-copulas==0.7.0
+copulas
