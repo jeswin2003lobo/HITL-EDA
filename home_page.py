@@ -1,97 +1,90 @@
 import streamlit as st
 
-def custom_css():
+def inject_custom_css():
     st.markdown("""
     <style>
-    body {
-        background-color: #f5f5f5;
-        font-family: "Segoe UI", sans-serif;
-    }
-    .target-audience {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        margin-top: 20px;
-    }
-    .audience {
-        background-color: #ffffff;
-        border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        margin: 10px;
-        padding: 20px;
-        width: 200px;
-        text-align: center;
-        transition: transform 0.2s;
-    }
-    .audience:hover {
-        transform: scale(1.05);
-    }
-    .audience-icon {
-        font-size: 2.5rem;
+    .section-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #1f4e79;
+        margin-top: 30px;
         margin-bottom: 10px;
     }
-    .audience-title {
-        font-size: 1.1rem;
-        font-weight: 600;
-    }
-    .thank-you {
-        margin-top: 30px;
-        font-size: 1.3rem;
-        color: #444;
-        text-align: center;
+    .info-box {
+        background-color: #f0f8ff;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        border-left: 5px solid #1f4e79;
     }
     .start-button {
-        display: inline-block;
-        background-color: #4CAF50;
+        background-color: #1f4e79;
         color: white;
         padding: 12px 24px;
+        font-size: 16px;
         border-radius: 8px;
-        font-weight: bold;
-        margin-top: 30px;
+        text-align: center;
+        display: inline-block;
+        margin-top: 20px;
         text-decoration: none;
+    }
+    .audience-tile {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-top: 10px;
+    }
+    .tile {
+        background-color: #ffffff;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        border-radius: 10px;
+        text-align: center;
+        padding: 20px;
+        flex: 1 1 200px;
     }
     </style>
     """, unsafe_allow_html=True)
 
 def show_home_page():
-    custom_css()
+    inject_custom_css()
 
-    st.title("🤖 Smart Data Understanding & Synthetic Data Generation")
-    st.markdown("A unified AutoEDA + Data Synthesis platform for efficient AI pipelines.")
+    st.title("📊 Smart Data Understanding & Synthetic Data Generation")
+    st.write("An intelligent platform for AutoEDA and privacy-aware synthetic data pipelines.")
 
-    # Key Features
-    st.subheader("✨ Key Features")
+    # Section: Key Functionalities
+    st.markdown('<div class="section-title">✨ Core Features</div>', unsafe_allow_html=True)
     st.markdown("""
-    - 📊 **Interactive Exploration:** Explore datasets with intuitive visualizations.
-    - 🧠 **AutoEDA Engine:** Automatically detect patterns, nulls, outliers, and correlations.
-    - 🧬 **Synthetic Data Generator:** Generate privacy-preserving datasets using CTGAN, TVAE, etc.
-    - 🛠️ **Seamless Preprocessing:** Handle missing values, encoding, and scaling.
-    - 🔒 **Privacy Aware:** Built-in compliance for HIPAA/GDPR-like environments.
+    - 📁 Upload datasets (CSV/Excel) and auto-detect modality (Tabular/Text).
+    - 🧪 AutoEDA summaries: Missing values, outliers, correlations, charts.
+    - 🧠 BERT/LLM-driven natural language summaries.
+    - ⚙️ Preprocessing: Encoding, Imputation, Scaling.
+    - 🧬 Synthetic data generation using CTGAN, TVAE, GaussianCopula.
+    - 📊 Side-by-side comparison: Real vs Synthetic (visual & statistical).
+    - 📥 Download cleaned/synthetic datasets and reports (CSV, JSON, PDF).
+    - 🔐 Privacy toggle (enable GDPR/HIPAA-style synthetic generation).
     """)
 
-    # Target Audience
-    st.subheader("👥 Who is this for?")
-    st.markdown('<div class="target-audience">', unsafe_allow_html=True)
-    audience_list = [
-        ("📊", "Data Analysts"),
-        ("🔍", "Data Scientists"),
-        ("💼", "Business Professionals"),
-        ("🎓", "Students & Educators"),
-        ("🏥", "Healthcare Experts"),
-        ("💻", "ML Engineers"),
-    ]
-    for icon, title in audience_list:
-        st.markdown(
-            f"""<div class="audience">
-                <div class="audience-icon">{icon}</div>
-                <div class="audience-title">{title}</div>
-            </div>""", unsafe_allow_html=True)
-    st.markdown("</div>", unsafe_allow_html=True)
+    # Section: Target Users
+    st.markdown('<div class="section-title">👥 Who Can Use This?</div>', unsafe_allow_html=True)
+    st.markdown('<div class="audience-tile">', unsafe_allow_html=True)
+    users = ["Data Scientists", "ML Engineers", "Healthcare Professionals", "Finance Analysts", "Researchers", "Students"]
+    icons = ["🔬", "💻", "🏥", "📈", "📚", "🎓"]
+    for icon, role in zip(icons, users):
+        st.markdown(f'<div class="tile"><div style="font-size:2rem;">{icon}</div><div>{role}</div></div>', unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
 
-    # Get Started
-    st.subheader("🚀 Get Started with AutoEDA")
+    # Section: Use Instructions
+    st.markdown('<div class="section-title">🚀 Getting Started</div>', unsafe_allow_html=True)
     st.markdown("""
-    Upload your dataset or try our built-in sample. Select preprocessing options, run AutoEDA, and download clean or synthetic datasets for ML pipelines.
-    """)
-    st.markdown('<div class="thank-you">Start your journey towards responsible, interpretable AI with AutoEDA!</div>', unsafe_allow_html=True)
-    st.markdown('<a href="#file-uploader" class="start-button">📁 Upload Your Dataset</a>', unsafe_allow_html=True)
+    <div class="info-box">
+        1. Upload a dataset using the sidebar.<br>
+        2. Configure preprocessing options (missing values, encoding, scaling).<br>
+        3. Let AutoEDA generate statistical & visual insights.<br>
+        4. Optionally, generate synthetic data using deep generative models.<br>
+        5. Download your results or compare real vs synthetic.
+    </div>
+    """, unsafe_allow_html=True)
+
+    # Final call to action
+    st.markdown('<div class="thank-you">Your AI journey begins here — get ready to analyze, simulate, and share data confidently!</div>', unsafe_allow_html=True)
+    st.markdown('<a href="#file-uploader" class="start-button">📥 Upload Your Dataset</a>', unsafe_allow_html=True)
