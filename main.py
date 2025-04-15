@@ -308,46 +308,41 @@ else:
             st.warning("No preprocessed data available to download.")
 
 
-if selected == "Synthetic Data Generation":
+    # SYNTHETIC DATA GENERATION
+    if selected == "Synthetic Data Generation":
     st.header("🧬 Synthetic Data Generator")
 
     if uploaded_file:
-        st.subheader("Step 1: Select a Model")
-        model_choice = st.selectbox("Choose a model for generation", ["CTGAN", "TVAE", "GaussianCopula"])
+        st.subheader("Step 1: Model Selection")
+        st.markdown("ℹ️ Note: On Streamlit Cloud, only GaussianCopula is supported.")
+
+        # Only GaussianCopula is allowed due to PyTorch restrictions on Cloud
+        model_choice = "GaussianCopula"
 
         if st.button("Generate Synthetic Data"):
-            with st.spinner("Training model and generating synthetic dataset..."):
+            with st.spinner("Training GaussianCopula model and generating synthetic data..."):
                 try:
-                    # Use selected model
-                    if model_choice == "CTGAN":
-                        model = CTGAN()
-                    elif model_choice == "TVAE":
-                        model = TVAE()
-                    else:
-                        model = GaussianCopula()
-
-                    # Fit model
+                    model = GaussianCopula()
                     model.fit(df)
 
-                    # Sample synthetic data of same size
                     synthetic_data = model.sample(len(df))
 
-                    st.success("✅ Synthetic data generated!")
+                    st.success("✅ Synthetic data generated successfully!")
 
-                    # Preview
-                    st.subheader("🔍 Synthetic Dataset Preview")
+                    st.subheader("🔍 Synthetic Data Preview")
                     st.dataframe(synthetic_data)
 
-                    # Download option
+                    # Download synthetic data
                     csv = synthetic_data.to_csv(index=False).encode('utf-8')
                     st.download_button(
-                        label="📥 Download CSV",
+                        label="📥 Download Synthetic Dataset (CSV)",
                         data=csv,
                         file_name="synthetic_data.csv",
                         mime="text/csv"
                     )
 
                 except Exception as e:
-                    st.error(f"❌ Error: {e}")
+                    st.error(f"❌ Error during generation: {e}")
     else:
         st.warning("⚠️ Please upload a CSV file from the sidebar to begin.")
+
