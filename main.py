@@ -68,15 +68,6 @@ st.sidebar.write("#")
 st.sidebar.write("#")
 st.sidebar.write("#")
 
-st.sidebar.markdown("### **Connect with Me**")
-# Create columns in the sidebar for LinkedIn and GitHub icons
-col1, col2 = st.sidebar.columns(2)
-
-# Define the width and height for the icons (adjust as needed)
-icon_width = 80
-icon_height = 80
-
-
 
 
 
