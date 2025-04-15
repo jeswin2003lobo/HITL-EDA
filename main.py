@@ -87,18 +87,6 @@ if uploaded_file:
     # get a copy of original df from the session state or create a new one. this is for preprocessing purposes
     if 'new_df' not in st.session_state:
         st.session_state.new_df = df.copy()
-
-    
-
-# Create a checkbox in the sidebar to choose between the example dataset and uploaded dataset
-
-elif use_example_data:
-    # Load the example dataset
-    df = function.load_data(file="example_dataset/titanic.csv")
-
-    # Set st.session_state.new_df to the example dataset for data preprocessing
-    if 'new_df' not in st.session_state:
-        st.session_state.new_df = df
    
 
 
