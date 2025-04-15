@@ -19,8 +19,4 @@ scipy<1.11
 matplotlib
 seaborn
 plotly
-PyYAML
-psutil
-faker==18.9.0
 copulas==0.7.0
-sdv==0.21.1

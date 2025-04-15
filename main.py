@@ -311,29 +311,27 @@ else:
 
     # SYNTHETIC DATA GENERATION
 if selected == "Synthetic Data Generation":
-    st.header("🧬 Synthetic Data Generator")
+    st.header("🧬 Synthetic Data Generator (Copulas-based)")
 
     if uploaded_file:
-        st.subheader("Step 1: Model Selection")
-        st.markdown("ℹ️ On Streamlit Cloud, only GaussianCopula is supported due to PyTorch limitations.")
+        st.subheader("Step 1: Generate synthetic data using Gaussian Copula (via Copulas library)")
+        from copulas.univariate import GaussianKDE, GaussianUnivariate
+        from copulas.multivariate import GaussianMultivariate
+        import pandas as pd
 
-        # Use only GaussianCopula
         if st.button("Generate Synthetic Data"):
-            with st.spinner("Training GaussianCopula model and generating synthetic data..."):
+            with st.spinner("Generating synthetic data using Copulas..."):
                 try:
-                    from sdv.tabular import GaussianCopula  # Make sure CTGAN/TVAE are not imported anywhere
-                    model = GaussianCopula()
+                    model = GaussianMultivariate()
                     model.fit(df)
 
                     synthetic_data = model.sample(len(df))
 
                     st.success("✅ Synthetic data generated successfully!")
 
-                    # Show preview
                     st.subheader("🔍 Synthetic Data Preview")
                     st.dataframe(synthetic_data)
 
-                    # Download CSV
                     csv = synthetic_data.to_csv(index=False).encode("utf-8")
                     st.download_button(
                         label="📥 Download Synthetic Dataset (CSV)",
@@ -341,8 +339,7 @@ if selected == "Synthetic Data Generation":
                         file_name="synthetic_data.csv",
                         mime="text/csv"
                     )
-
                 except Exception as e:
-                    st.error(f"❌ Error during synthetic data generation: {e}")
+                    st.error(f"❌ Error during generation: {e}")
     else:
         st.warning("⚠️ Please upload a CSV file from the sidebar to begin.")
