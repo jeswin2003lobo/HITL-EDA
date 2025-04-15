@@ -30,7 +30,7 @@ st.markdown(hide_st_style, unsafe_allow_html=True)
 
 
 # Create a Streamlit sidebar
-st.sidebar.title("AutoEDA: Automated Exploratory Data Analysis and Processing")
+st.sidebar.title("HITL-EDA: Human-in-the-Loop Exploratory Data Analysis and Processing")
 
 # Set custom CSS
 custom_css = home_page.custom_css
