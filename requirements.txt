@@ -1,11 +1,36 @@
+#pandas
+#numpy
+#scikit-learn
+#scipy
+#streamlit
+#matplotlib
+#seaborn
+#plotly
+#streamlit-option-menu
+#streamlit_extras
+
+
+# Core Streamlit App & UI
+streamlit
+streamlit-option-menu
+streamlit-extras
+
+# Data Manipulation & Analysis
 pandas
 numpy
 scikit-learn
-scipy
-streamlit
+scipy<1.11
+
+# Visualization
 matplotlib
 seaborn
 plotly
-streamlit-option-menu
-streamlit_extras
-streamlit streamlit-option-menu streamlit-extras pandas numpy scikit-learn scipy<1.11 matplotlib seaborn plotly PyYAML psutil sdv==1.0.0 torch==2.0.1
+
+# SDV (Synthetic Data Generation — only GaussianCopula)
+sdv==0.21.1
+copulas
+faker
+
+# Utilities
+PyYAML
+psutil
