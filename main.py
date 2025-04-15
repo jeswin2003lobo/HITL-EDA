@@ -10,7 +10,7 @@ import data_analysis_functions as function
 import data_preprocessing_function as preprocessing_function
 import home_page
 import base64
-
+from sdv.tabular import CTGAN, TVAE, GaussianCopula
 
 
 # # page config sets the text and icon that we see on the tab
@@ -306,3 +306,43 @@ else:
             st.markdown(f'<a href="{href}" download="preprocessed_data.csv"><button>Download Preprocessed Data</button></a>', unsafe_allow_html=True)
         else:
             st.warning("No preprocessed data available to download.")
+
+
+if selected == 'Synthetic Data Generation':
+    st.header("🧬 Synthetic Data Generator")
+
+    if uploaded_file:
+        st.subheader("Step 1: Select Model for Synthetic Generation")
+        model_choice = st.selectbox("Choose a model", ["CTGAN", "TVAE", "GaussianCopula"])
+
+        if st.button("Generate Synthetic Data"):
+            with st.spinner("Training model and generating synthetic data..."):
+                if model_choice == "CTGAN":
+                    model = CTGAN()
+                elif model_choice == "TVAE":
+                    model = TVAE()
+                else:
+                    model = GaussianCopula()
+
+                model.fit(df)
+                synthetic_data = model.sample(len(df))  # generate same number of rows
+
+                # Store in session for later use or download
+                st.session_state.synthetic_data = synthetic_data
+
+                st.success("Synthetic data generated successfully!")
+
+                # Show preview
+                st.subheader("Synthetic Data Preview")
+                st.dataframe(synthetic_data)
+
+                # Download option
+                csv = synthetic_data.to_csv(index=False).encode('utf-8')
+                st.download_button(
+                    label="📥 Download Synthetic CSV",
+                    data=csv,
+                    file_name='synthetic_data.csv',
+                    mime='text/csv'
+                )
+    else:
+        st.warning("Please upload a dataset from the sidebar to generate synthetic data.")
