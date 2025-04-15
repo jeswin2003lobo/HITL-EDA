@@ -8,4 +8,4 @@ seaborn
 plotly
 streamlit-option-menu
 streamlit_extras
-streamlit pandas numpy matplotlib seaborn plotly sdv
+streamlit streamlit-option-menu streamlit-extras pandas numpy scikit-learn scipy<1.11 matplotlib seaborn plotly PyYAML psutil sdv==1.0.0 torch==2.0.1
