@@ -89,9 +89,8 @@ def show_home_page():
     st.markdown("</div>", unsafe_allow_html=True)
 
     # Get Started
-    st.subheader("🚀 Get Started with AutoEDA")
+    st.subheader("🚀 Get Started with HITL-EDA")
     st.markdown("""
-    Upload your dataset or try our built-in sample. Select preprocessing options, run AutoEDA, and download clean or synthetic datasets for ML pipelines.
+    Upload your dataset or try our built-in sample. Select preprocessing options, run HITL-EDA, and download clean or synthetic datasets for ML pipelines.
     """)
-    st.markdown('<div class="thank-you">Start your journey towards responsible, interpretable AI with AutoEDA!</div>', unsafe_allow_html=True)
-    st.markdown('<a href="#file-uploader" class="start-button">📁 Upload Your Dataset</a>', unsafe_allow_html=True)
+
