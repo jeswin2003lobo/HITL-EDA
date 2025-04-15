@@ -9,28 +9,18 @@
 #streamlit-option-menu
 #streamlit_extras
 
-
-# Core Streamlit App & UI
 streamlit
 streamlit-option-menu
 streamlit-extras
-
-# Data Manipulation & Analysis
 pandas
 numpy
 scikit-learn
 scipy<1.11
-
-# Visualization
 matplotlib
 seaborn
 plotly
-
-# SDV (Synthetic Data Generation — only GaussianCopula)
-sdv==0.21.1
-copulas
-faker
-
-# Utilities
 PyYAML
 psutil
+faker==18.9.0
+copulas==0.7.0
+sdv==0.21.1
