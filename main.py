@@ -308,41 +308,46 @@ else:
             st.warning("No preprocessed data available to download.")
 
 
-if selected == 'Synthetic Data Generation':
+if selected == "Synthetic Data Generation":
     st.header("🧬 Synthetic Data Generator")
 
     if uploaded_file:
-        st.subheader("Step 1: Select Model for Synthetic Generation")
-        model_choice = st.selectbox("Choose a model", ["CTGAN", "TVAE", "GaussianCopula"])
+        st.subheader("Step 1: Select a Model")
+        model_choice = st.selectbox("Choose a model for generation", ["CTGAN", "TVAE", "GaussianCopula"])
 
         if st.button("Generate Synthetic Data"):
-            with st.spinner("Training model and generating synthetic data..."):
-                if model_choice == "CTGAN":
-                    model = CTGAN()
-                elif model_choice == "TVAE":
-                    model = TVAE()
-                else:
-                    model = GaussianCopula()
+            with st.spinner("Training model and generating synthetic dataset..."):
+                try:
+                    # Use selected model
+                    if model_choice == "CTGAN":
+                        model = CTGAN()
+                    elif model_choice == "TVAE":
+                        model = TVAE()
+                    else:
+                        model = GaussianCopula()
 
-                model.fit(df)
-                synthetic_data = model.sample(len(df))  # generate same number of rows
+                    # Fit model
+                    model.fit(df)
 
-                # Store in session for later use or download
-                st.session_state.synthetic_data = synthetic_data
+                    # Sample synthetic data of same size
+                    synthetic_data = model.sample(len(df))
 
-                st.success("Synthetic data generated successfully!")
+                    st.success("✅ Synthetic data generated!")
 
-                # Show preview
-                st.subheader("Synthetic Data Preview")
-                st.dataframe(synthetic_data)
+                    # Preview
+                    st.subheader("🔍 Synthetic Dataset Preview")
+                    st.dataframe(synthetic_data)
 
-                # Download option
-                csv = synthetic_data.to_csv(index=False).encode('utf-8')
-                st.download_button(
-                    label="📥 Download Synthetic CSV",
-                    data=csv,
-                    file_name='synthetic_data.csv',
-                    mime='text/csv'
-                )
+                    # Download option
+                    csv = synthetic_data.to_csv(index=False).encode('utf-8')
+                    st.download_button(
+                        label="📥 Download CSV",
+                        data=csv,
+                        file_name="synthetic_data.csv",
+                        mime="text/csv"
+                    )
+
+                except Exception as e:
+                    st.error(f"❌ Error: {e}")
     else:
-        st.warning("Please upload a dataset from the sidebar to generate synthetic data.")
+        st.warning("⚠️ Please upload a CSV file from the sidebar to begin.")
