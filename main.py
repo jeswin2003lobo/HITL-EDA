@@ -10,7 +10,7 @@ import data_analysis_functions as function
 import data_preprocessing_function as preprocessing_function
 import home_page
 import base64
-from sdv.tabular import GaussianCopula
+from copulas.multivariate import GaussianMultivariate
 
 
 
@@ -311,16 +311,15 @@ else:
 
     # SYNTHETIC DATA GENERATION
 if selected == "Synthetic Data Generation":
-    st.header("🧬 Synthetic Data Generator (Copulas-based)")
+    st.header("🧬 Synthetic Data Generator (copulas-based)")
 
     if uploaded_file:
-        st.subheader("Step 1: Generate synthetic data using Gaussian Copula (via Copulas library)")
-        from copulas.univariate import GaussianKDE, GaussianUnivariate
         from copulas.multivariate import GaussianMultivariate
-        import pandas as pd
+
+        st.subheader("Step 1: Generate synthetic data using Gaussian Copula")
 
         if st.button("Generate Synthetic Data"):
-            with st.spinner("Generating synthetic data using Copulas..."):
+            with st.spinner("Training model and generating synthetic dataset..."):
                 try:
                     model = GaussianMultivariate()
                     model.fit(df)
@@ -340,6 +339,6 @@ if selected == "Synthetic Data Generation":
                         mime="text/csv"
                     )
                 except Exception as e:
-                    st.error(f"❌ Error during generation: {e}")
+                    st.error(f"❌ Error during synthetic generation: {e}")
     else:
-        st.warning("⚠️ Please upload a CSV file from the sidebar to begin.")
+        st.warning("⚠️ Please upload a CSV file to generate synthetic data.")
