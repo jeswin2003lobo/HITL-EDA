@@ -8,3 +8,4 @@ seaborn
 plotly
 streamlit-option-menu
 streamlit_extras
+streamlit pandas numpy matplotlib seaborn plotly sdv
