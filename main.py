@@ -10,7 +10,8 @@ import data_analysis_functions as function
 import data_preprocessing_function as preprocessing_function
 import home_page
 import base64
-from sdv.tabular import CTGAN, TVAE, GaussianCopula
+from sdv.tabular import GaussianCopula
+
 
 
 # # page config sets the text and icon that we see on the tab
