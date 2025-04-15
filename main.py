@@ -43,8 +43,8 @@ st.title("Welcome to HITL-EDA!")
 
 selected = option_menu(
     menu_title=None,
-    options=['Home', 'Data Exploration', 'Data Preprocessing'],
-    icons=['house-heart', 'bar-chart-fill', 'hammer'],
+    options=['Home', 'Data Exploration', 'Data Preprocessing', 'Synthetic Data Generation'],
+    icons=['house-heart', 'bar-chart-fill', 'hammer', 'robot'],
     orientation='horizontal'
 )
 
