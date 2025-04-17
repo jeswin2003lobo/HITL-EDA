@@ -12,6 +12,7 @@ import home_page
 import base64
 from copulas.multivariate import GaussianMultivariate
 import io
+from synthetic_data_generator import generate_synthetic_data
 
 
 # # page config sets the text and icon that we see on the tab
@@ -309,133 +310,66 @@ else:
             st.warning("No preprocessed data available to download.")
 
 
-import streamlit as st
-import pandas as pd
-import io
-import base64
-from sdv.single_table import GaussianCopulaSynthesizer, CTGANSynthesizer
-from sdv.metadata import SingleTableMetadata
-import matplotlib.pyplot as plt
-import seaborn as sns
+    # SYNTHETIC DATA GENERATION
+    if selected == "Synthetic Data Generation":
+        st.header("🧬 Synthetic Data Generator (copulas-based)")
 
-# Streamlit app for synthetic data generation
-if selected == "Synthetic Data Generation":
-    st.header("🧬 Synthetic Data Generator (copulas-based)")
+        # File upload handling
+        if uploaded_file is None:
+            sdg_uploaded_file = st.file_uploader("📁 Upload your CSV file for synthetic data generation", type=["csv"])
+        else:
+            sdg_uploaded_file = uploaded_file
+            st.info("Using the dataset already uploaded in the sidebar")
 
-    # File upload handling
-    if uploaded_file is None:
-        sdg_uploaded_file = st.file_uploader("📁 Upload your CSV file for synthetic data generation", type=["csv"])
-    else:
-        sdg_uploaded_file = uploaded_file
-        st.info("Using the dataset already uploaded in the sidebar")
+        if sdg_uploaded_file:
+            synthetic_data, success, error = generate_synthetic_data(sdg_uploaded_file, df if sdg_uploaded_file == uploaded_file else None)
 
-    if sdg_uploaded_file:
-        try:
-            # Load DataFrame appropriately
-            if sdg_uploaded_file == uploaded_file and 'df' in locals():
-                sdg_df = df.copy()
+            if success:
+                st.success("✅ Synthetic data generated successfully!")
+
+                # Show synthetic data preview
+                st.subheader("🔍 Synthetic Data Preview")
+                st.dataframe(synthetic_data.head())
+
+                # Tabs for summary and visualization
+                st.subheader("📊 Data Comparison")
+                tab1, tab2 = st.tabs(["Statistical Summary", "Visualizations"])
+
+                with tab1:
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        st.write("Original Data Statistics")
+                        st.dataframe(df.describe())
+                    with col2:
+                        st.write("Synthetic Data Statistics")
+                        st.dataframe(synthetic_data.describe())
+
+                with tab2:
+                    numeric_cols = df.select_dtypes(include=['number']).columns.tolist()
+                    if numeric_cols:
+                        selected_col = st.selectbox(
+                            "Select column for distribution comparison", 
+                            numeric_cols,
+                            key="main_distribution_select"
+                        )
+
+                        fig, ax = plt.subplots(1, 2, figsize=(12, 4))
+                        sns.histplot(df[selected_col], ax=ax[0], kde=True)
+                        ax[0].set_title(f"Original: {selected_col}")
+
+                        sns.histplot(synthetic_data[selected_col], ax=ax[1], kde=True)
+                        ax[1].set_title(f"Synthetic: {selected_col}")
+
+                        st.pyplot(fig)
+                    else:
+                        st.warning("No numerical columns available for visualization.")
+
+                # Download button
+                csv = synthetic_data.to_csv(index=False)
+                b64 = base64.b64encode(csv.encode()).decode()
+                href = f'<a href="data:file/csv;base64,{b64}" download="synthetic_data.csv" class="btn">📥 Download Synthetic Data (CSV)</a>'
+                st.markdown(href, unsafe_allow_html=True)
+
             else:
-                content = sdg_uploaded_file.read()
-                if not content:
-                    st.error("❌ The uploaded file is empty. Please upload a valid CSV file.")
-                    st.stop()
-                sdg_df = pd.read_csv(io.BytesIO(content))
-
-            if sdg_df.empty:
-                st.error("❌ The uploaded dataset is empty after loading. Please check your CSV.")
-                st.stop()
-
-            # Display original data preview
-            st.subheader("📄 Original Data Preview")
-            st.dataframe(sdg_df.head())
-
-            # Choose model from available options
-            model_option = st.selectbox(
-                "Select Model for Data Generation",
-                ("Gaussian Copula", "CTGAN")
-            )
-
-            col1, col2 = st.columns(2)
-
-            with col1:
-                num_samples = st.slider(
-                    "Number of Synthetic Data Rows",
-                    min_value=10,
-                    max_value=500,
-                    value=min(200, len(sdg_df)),
-                    step=10
-                )
-
-            with col2:
-                epochs = st.slider(
-                    "Training Epochs",
-                    min_value=1,
-                    max_value=100,
-                    value=30,
-                    step=5
-                )
-
-            if st.button("Generate Synthetic Data"):
-                with st.spinner("Training model and generating synthetic dataset..."):
-                    try:
-                        # Initialize metadata
-                        metadata = SingleTableMetadata()
-                        metadata.detect_from_dataframe(sdg_df)
-
-                        # Initialize selected model
-                        if model_option == "Gaussian Copula":
-                            synthesizer = GaussianCopulaSynthesizer(metadata)
-                        else:  # Use CTGAN if selected
-                            synthesizer = CTGANSynthesizer(metadata)
-
-                        # Fit model and generate synthetic data
-                        synthesizer.fit(sdg_df)
-                        synthetic_data = synthesizer.sample(num_rows=num_samples)
-
-                        st.success("✅ Synthetic data generated successfully!")
-
-                        # Show synthetic data preview
-                        st.subheader("🔍 Synthetic Data Preview")
-                        st.dataframe(synthetic_data.head())
-
-                        # Tabs for summary and visualization
-                        st.subheader("📊 Data Comparison")
-                        tab1, tab2 = st.tabs(["Statistical Summary", "Visualizations"])
-
-                        with tab1:
-                            col1, col2 = st.columns(2)
-                            with col1:
-                                st.write("Original Data Statistics")
-                                st.dataframe(sdg_df.describe())
-                            with col2:
-                                st.write("Synthetic Data Statistics")
-                                st.dataframe(synthetic_data.describe())
-
-                        with tab2:
-                            numeric_cols = sdg_df.select_dtypes(include=['number']).columns.tolist()
-                            if numeric_cols:
-                                selected_col = st.selectbox("Select column for distribution comparison", numeric_cols)
-
-                                fig, ax = plt.subplots(1, 2, figsize=(12, 4))
-                                sns.histplot(sdg_df[selected_col], ax=ax[0], kde=True)
-                                ax[0].set_title(f"Original: {selected_col}")
-
-                                sns.histplot(synthetic_data[selected_col], ax=ax[1], kde=True)
-                                ax[1].set_title(f"Synthetic: {selected_col}")
-
-                                st.pyplot(fig)
-                            else:
-                                st.warning("No numerical columns available for visualization.")
-
-                        # Download button
-                        csv = synthetic_data.to_csv(index=False)
-                        b64 = base64.b64encode(csv.encode()).decode()
-                        href = f'<a href="data:file/csv;base64,{b64}" download="synthetic_data.csv" class="btn">📥 Download Synthetic Data (CSV)</a>'
-                        st.markdown(href, unsafe_allow_html=True)
-
-                    except Exception as e:
-                        st.error(f"❌ Error generating synthetic data: {str(e)}")
-                        st.info("Tip: Ensure your dataset contains valid numerical/categorical columns and no null values.")
-
-        except Exception as e:
-            st.error(f"❌ Could not read the CSV file: {str(e)}")
+                st.error(f"❌ Error generating synthetic data: {error}")
+                st.info("Tip: Ensure your dataset contains valid numerical/categorical columns and no null values.")
